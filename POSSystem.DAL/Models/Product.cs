@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace POSSystem.DAL.Models
 {
-    class Product
+    public class Product
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

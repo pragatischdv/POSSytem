@@ -29,7 +29,7 @@ namespace POSSystem.DAL.Identity
         {
             return new ApplicationDbContext();
         }
-        DbSet<Models.Sale> Sales { get; set; }
-        DbSet<Models.Product> Products { get; set; }
+        public DbSet<Models.Sale> Sales { get; set; }
+        public DbSet<Models.Product> Products { get; set; }
     }
 }
