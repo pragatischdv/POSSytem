@@ -14,9 +14,9 @@ namespace POSSystem.DAL.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
         public string Name { get; set; }
-        public decimal UnitPrice { get; set; }
+        public Double UnitPrice { get; set; }
         public int AvailableQuantity { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
         public string Category { get; set; }
 
     }

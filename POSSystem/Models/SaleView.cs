@@ -7,11 +7,12 @@ namespace POSSystem.Models
 {
     public class SaleView
     {
-        public decimal VAT { get; set; }
-        public decimal Discount { get; set; }
-        public decimal SubTotal { get; set; }
-        public decimal Total { get; set; }
+        public Double VAT { get; set; }
+        public Double Discount { get; set; }
+        public Double SubTotal { get; set; }
+        public Double Total { get; set; }
         public List<int> ProductIDs { get; set; }
-        
+        public SalesProductView Products { get; set; }
+
     }
 }

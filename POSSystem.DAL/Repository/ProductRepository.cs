@@ -16,7 +16,7 @@ namespace POSSystem.DAL.Repository
         {
             using(var db = new ApplicationDbContext())
             {
-                var productList = db.Products;
+                var productList = db.Products.Where(x => x.AvailableQuantity > 0);
                 if (string.IsNullOrEmpty(catagory))
                 {
                     return await productList.ToListAsync();
@@ -49,6 +49,7 @@ namespace POSSystem.DAL.Repository
                     var product = await GetProduct(id);
                     if (command.Equals(Command.IncQuantity))
                     {
+                        if (product.AvailableQuantity == 0) throw new Exception();
                         product.AvailableQuantity = product.AvailableQuantity - 1;
                     }
                     else if (command.Equals(Command.DecQuantity))

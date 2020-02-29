@@ -13,15 +13,24 @@ namespace POSSystem.Controllers
     {
         public ProductRepository productRepository = new ProductRepository();
         // GET: Product
-        public ActionResult Index()
+        [Authorize]
+        public async Task<ActionResult> Index()
         {
-            return View();
+            var productList = await productRepository.GetProductList();
+            IndexView indexView = new IndexView()
+            {
+                ProductsList = await GetConsolidatedProductList(),
+                Sale = new SaleView()
+            };
+            return View(indexView);
         }
-        public async Task<JsonResult> AddProductToSale(int id)
+        public async Task<ActionResult> AddProductToSale(int id)
         {
             if(await productRepository.EditProduct(id, ProductRepository.Command.IncQuantity))
             {
-                return Json(true);
+                var product = await productRepository.GetProduct(id);
+                ViewBag["Product"] = product;
+                return PartialView("");
             }
             return Json(false);
         }
@@ -34,13 +43,34 @@ namespace POSSystem.Controllers
             return Json(false);
         }
 
+        public async Task<JsonResult> IncrementQuantity(int id)
+        {
+            if (await productRepository.EditProduct(id, ProductRepository.Command.IncQuantity))
+            {
+                return Json(true);
+            }
+            return Json(false);
+        }
+
         public async Task<ActionResult> CancelSale(List<CancelSaleView> canceledProducts)
         {
             foreach(var canceledProduct in canceledProducts)
             {
                 var result = await productRepository.CancelSaleForProductId(canceledProduct.ProductId, canceledProduct.Quantity);
             }
-            return PartialView("");
+            return PartialView("", await GetConsolidatedProductList());
+        }
+
+        [NonAction]
+        public async Task<List<ProductView>> GetConsolidatedProductList()
+        {
+            var productList = await productRepository.GetProductList();
+            var products = new List<ProductView>();
+            foreach (var product in productList)
+            {
+                products.Add(new ProductView() { ID = product.ID, Name = product.Name, Image = product.Image });
+            }
+            return products;
         }
     }
 }

@@ -1,0 +1,14 @@
+﻿@model POSSystem.Models.IndexView
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<div>
+    @Html.Partial("_Create", Model.Sale)
+</div>
+
+<div>
+    @Html.Partial("_ProductList", Model.ProductsList)
+</div>
+

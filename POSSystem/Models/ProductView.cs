@@ -5,7 +5,7 @@ using System.Web;
 
 namespace POSSystem.Models
 {
-    public class ProductListView
+    public class ProductView
     {
         public int ID { get; set; }
         public string Image { get; set; }
@@ -15,9 +15,9 @@ namespace POSSystem.Models
     {
         public int ID { get; set; }
         public string Name{ get; set; }
-        public decimal Price { get; set; }
+        public Double Price { get; set; }
         public int Qauntity { get; set; }
-        public decimal Total { get; set; }
+        public Double Total { get; set; }
     }
     public class CancelSaleView
     {

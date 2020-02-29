@@ -15,8 +15,8 @@ namespace POSSystem.DAL.Models
         public long InvoiceNumber { get; set; }
         public string EmployeeUsername { get; set; }
         public DateTime CreatedOn { get; set; }
-        public decimal VAT { get; set; }
-        public decimal TotalPrice { get; set; }
+        public Double VAT { get; set; }
+        public Double TotalPrice { get; set; }
         public ICollection<Product> Products { get; set; }
     }
 }

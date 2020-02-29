@@ -177,6 +177,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ProductView.cs" />
+    <Compile Include="Models\IndexView.cs" />
     <Compile Include="Models\SaleView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -186,6 +187,21 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\clothing.jpg" />
+    <Content Include="Content\images\computer_repair.jpeg" />
+    <Content Include="Content\images\comuter.jpg" />
+    <Content Include="Content\images\gift_folding.jpeg" />
+    <Content Include="Content\images\grapes.jpeg" />
+    <Content Include="Content\images\headphone.jpg" />
+    <Content Include="Content\images\jacket.jpeg" />
+    <Content Include="Content\images\jacket_men.jpg" />
+    <Content Include="Content\images\keyboard.jpg" />
+    <Content Include="Content\images\kiwi.jpeg" />
+    <Content Include="Content\images\motherboard.jpg" />
+    <Content Include="Content\images\mouse.jpg" />
+    <Content Include="Content\images\notebook.jpg" />
+    <Content Include="Content\images\strawberries.jpeg" />
+    <Content Include="Content\images\tie.jpeg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -237,10 +253,12 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Shared\_ProductList.cshtml" />
+    <Content Include="Views\Shared\_Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Product\" />
     <Folder Include="Views\Sale\" />
   </ItemGroup>
   <ItemGroup>
