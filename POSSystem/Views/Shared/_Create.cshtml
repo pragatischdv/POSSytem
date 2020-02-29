@@ -3,9 +3,26 @@
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
+    <div id="product_in_sale">
+        @if (Session["ProductSaleList"] != null)
+        {
+            @Html.Partial("_SaleProductList", Session["ProductSaleList"] as List<POSSystem.Models.SalesProductView>);
+        }
+        else
+        {
+        <table>
+            <tr>
+                <th></th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+        </table>
+        <div id="empty_table_warning">THERE ARE NO PRODUCTS</div>
+        }
+    </div>
     <div class="form-horizontal">
-        <h4>SaleView</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -48,6 +65,3 @@
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

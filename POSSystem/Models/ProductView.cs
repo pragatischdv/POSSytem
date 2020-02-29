@@ -16,8 +16,9 @@ namespace POSSystem.Models
         public int ID { get; set; }
         public string Name{ get; set; }
         public Double Price { get; set; }
-        public int Qauntity { get; set; }
+        public int Quantity { get; set; }
         public Double Total { get; set; }
+        public int AvailableQuantity { get; set; }
     }
     public class CancelSaleView
     {

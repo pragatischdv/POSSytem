@@ -12,7 +12,6 @@ namespace POSSystem.Models
         public Double SubTotal { get; set; }
         public Double Total { get; set; }
         public List<int> ProductIDs { get; set; }
-        public SalesProductView Products { get; set; }
 
     }
 }

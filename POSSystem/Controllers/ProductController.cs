@@ -26,39 +26,82 @@ namespace POSSystem.Controllers
         }
         public async Task<ActionResult> AddProductToSale(int id)
         {
-            if(await productRepository.EditProduct(id, ProductRepository.Command.IncQuantity))
+            var _product = await productRepository.EditProduct(id, ProductRepository.Command.IncQuantity);
+            if (_product is null)
             {
-                var product = await productRepository.GetProduct(id);
-                ViewBag["Product"] = product;
-                return PartialView("");
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
-            return Json(false);
+            SalesProductView _productSale = new SalesProductView()
+            {
+                ID = _product.ID,
+                Name = _product.Name,
+                Price = _product.UnitPrice,
+                AvailableQuantity = _product.AvailableQuantity,
+                Quantity = 1,
+                Total = _product.UnitPrice
+            };
+            if (Session["ProductSaleList"] != null)
+            {
+                List<SalesProductView> salesProducts = Session["ProductSaleList"] as List<SalesProductView>;
+                var _saleProduct = salesProducts.Where(s => s.ID == _product.ID).FirstOrDefault();
+                if (_saleProduct != null)
+                {
+                    _saleProduct.Quantity += 1;
+                    _saleProduct.Total = _saleProduct.Quantity * _saleProduct.Price;
+                    Session["ProductSaleList"] = salesProducts;
+                }
+                else
+                {
+                    (Session["ProductSaleList"] as List<SalesProductView>).Add(_productSale);
+                }
+            }
+            else
+            {
+                Session["ProductSaleList"] = new List<SalesProductView>();
+                (Session["ProductSaleList"] as List<SalesProductView>).Add(_productSale);
+            }
+            return PartialView("_SaleProductList", Session["ProductSaleList"]);
         }
-        public async Task<JsonResult> DecrementQuantity(int id)
+        public async Task<ActionResult> DecrementQuantity(int id)
         {
-            if (await productRepository.EditProduct(id, ProductRepository.Command.DecQuantity))
+            var _product = await productRepository.EditProduct(id, ProductRepository.Command.DecQuantity);
+            if (_product is null)
             {
-                return Json(true);
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
-            return Json(false);
-        }
-
-        public async Task<JsonResult> IncrementQuantity(int id)
-        {
-            if (await productRepository.EditProduct(id, ProductRepository.Command.IncQuantity))
+            SalesProductView _productSale = new SalesProductView()
             {
-                return Json(true);
+                ID = _product.ID,
+                Name = _product.Name,
+                Price = _product.UnitPrice,
+                AvailableQuantity = _product.AvailableQuantity
+            };
+            List<SalesProductView> salesProducts = Session["ProductSaleList"] as List<SalesProductView>;
+            var _saleProduct = salesProducts.Where(s => s.ID == _product.ID).FirstOrDefault();
+            if (_saleProduct != null)
+            {
+                _saleProduct.Quantity -= 1;
+                if (_saleProduct.Quantity == 0)
+                {
+                    salesProducts.Remove(_saleProduct);
+                }
+                else
+                {
+                    _saleProduct.Total = _saleProduct.Quantity * _saleProduct.Price;
+                }
+                Session["ProductSaleList"] = salesProducts;
             }
-            return Json(false);
+            return PartialView("_SaleProductList", Session["ProductSaleList"]);
         }
-
+        [HttpPost]
         public async Task<ActionResult> CancelSale(List<CancelSaleView> canceledProducts)
         {
             foreach(var canceledProduct in canceledProducts)
             {
                 var result = await productRepository.CancelSaleForProductId(canceledProduct.ProductId, canceledProduct.Quantity);
             }
-            return PartialView("", await GetConsolidatedProductList());
+            Session.Remove("ProductSaleList");
+            return PartialView("_ProductList", await GetConsolidatedProductList());
         }
 
         [NonAction]

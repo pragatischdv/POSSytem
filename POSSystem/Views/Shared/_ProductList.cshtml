@@ -1,33 +1,11 @@
 ﻿@model IEnumerable<POSSystem.Models.ProductView>
+    <div>
+        @foreach (var item in Model)
+        {
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Image)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            <img src="~/Content/images/@item.Image"/>
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
-}
-
-</table>
+            <div id="product_@item.ID" style="float:left;width:20%;height:80px;margin:5px;background-image:url('../../Content/images/@item.Image');">
+                @item.Name
+                <button type="button" class="add_to_sale" id="@item.ID">Add</button>
+            </div>
+        }
+    </div>

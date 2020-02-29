@@ -29,6 +29,7 @@ namespace POSSystem.Controllers
                 sale.Products.Add(await productRepository.GetProduct(id));
             }
             var result = await saleRepository.AddSale(sale);
+            Session.Remove("ProductSaleList");
             return PartialView("", result);
         }
     }

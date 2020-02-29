@@ -1,14 +1,62 @@
 ﻿@model POSSystem.Models.IndexView
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "POS System";
 }
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
 
-<h2>Index</h2>
-<div>
-    @Html.Partial("_Create", Model.Sale)
+<div class="row">
+    <div id="sale" class="col-md-4">
+        @Html.Partial("_Create", Model.Sale)
+    </div>
+
+    <div id="product_list" class="col-md-8">
+        @Html.Partial("_ProductList", Model.ProductsList)
+    </div>
 </div>
-
-<div>
-    @Html.Partial("_ProductList", Model.ProductsList)
-</div>
-
+<script>
+    function addProductInSale(id) {
+        $.ajax({
+                url: "@Url.Action("AddProductToSale", "Product", new {id = "-1" })".replace("-1", id),
+                method: "GET",
+                contentType:'text/html',
+                success: function (data) {
+                    console.log("success");
+                    $("#product_in_sale").html(data);
+                    updateCosts();
+                }
+            });
+    }
+    function removeProductInSale(id) {
+        $.ajax({
+                url: "@Url.Action("DecrementQuantity", "Product", new {id = "-1" })".replace("-1", id),
+                method: "GET",
+                contentType:'text/html',
+                success: function (data) {
+                    console.log("success");
+                    $("#product_in_sale").html(data);
+                    updateCosts();
+                }
+            });
+    }
+    function updateCosts() {
+        var subTotal = 0;
+        $(".total-cost").each(function () {
+            subTotal = parseFloat(subTotal) + parseFloat($(this).val());
+        });
+        if ($("#Discount").val()) {
+            subTotal = parseFloat(subTotal) - 0.01 * parseFloat($("#Discount").val()) * parseFloat(subTotal);
+        }
+        $("#SubTotal").val(subTotal);
+        $("#Total").val(parseFloat(subTotal) + parseFloat($("#VAT").val() ? $("#VAT").val() : '0'));
+    }
+    $(document).ready(function () {
+        $(".add_to_sale").on("click", function () {
+            var id = $(this).attr("id");
+            addProductInSale(id);
+        });
+        updateCosts();
+        $("#VAT, #Discount").on("keyup", function () {
+            updateCosts();
+        });
+    });
+</script>

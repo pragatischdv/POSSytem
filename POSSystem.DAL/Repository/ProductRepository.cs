@@ -40,7 +40,7 @@ namespace POSSystem.DAL.Repository
                 }
             }
         }
-        public async Task<bool> EditProduct(int id, Command command)
+        public async Task<Product> EditProduct(int id, Command command)
         {
             using(var db = new ApplicationDbContext())
             {
@@ -57,11 +57,11 @@ namespace POSSystem.DAL.Repository
                         product.AvailableQuantity = product.AvailableQuantity + 1;
                     }
                     await db.SaveChangesAsync();
-                    return true;
+                    return product;
                 }
                 catch (Exception e)
                 {
-                    return false;
+                    return null;
                 }
             }
         }
