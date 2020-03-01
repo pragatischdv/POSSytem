@@ -16,7 +16,19 @@ namespace POSSystem.DAL.Repository
             {
                 try
                 {
-                    var result = db.Sales.Add(sale);
+                    Sale _sale = new Sale() {
+                        CreatedOn = sale.CreatedOn,
+                        EmployeeUsername = sale.EmployeeUsername,
+                        TotalPrice = sale.TotalPrice,
+                        VAT = sale.VAT,
+                        Products = new List<Product>()
+                    };
+                    var products = sale.Products;
+                    foreach (var product in products)
+                    {
+                        _sale.Products.Add(db.Products.Find(product.ID));
+                    }
+                    var result = db.Sales.Add(_sale);
                     await db.SaveChangesAsync();
                     return result;
                 }

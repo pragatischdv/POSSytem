@@ -17,20 +17,51 @@ namespace POSSystem.Controllers
         {
             SaleRepository saleRepository = new SaleRepository();
             ProductRepository productRepository = new ProductRepository();
-            
-            Sale sale = new Sale() {
+
+            Sale sale = new Sale()
+            {
                 CreatedOn = DateTime.Now,
                 EmployeeUsername = User.Identity.Name,
                 TotalPrice = saleView.Total,
-                VAT = saleView.VAT
+                VAT = saleView.VAT,
+                Products = new List<Product>()
             };
-            foreach (var id in saleView.ProductIDs)
+            List<SalesProductView> salesProducts = Session["ProductSaleList"] as List<SalesProductView>;
+            salesProducts = salesProducts.Where(x => x.Quantity != 0).ToList();
+            foreach (var product in salesProducts)
             {
-                sale.Products.Add(await productRepository.GetProduct(id));
+                Product _product = new Product()
+                {
+                    ID = product.ID,
+                    Name = product.Name,
+                    UnitPrice = product.Price,
+                    Category = product.Category,
+                    AvailableQuantity = product.AvailableQuantity,
+                    Image = product.Image
+                };
+                await productRepository.UpdateSaleForProduct(_product);
+                sale.Products.Add(_product);
             }
-            var result = await saleRepository.AddSale(sale);
-            Session.Remove("ProductSaleList");
-            return PartialView("", result);
+            if (ModelState.IsValid)
+            {
+                var result = await saleRepository.AddSale(sale);
+                return RedirectToAction("GetReciept", result);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
+        public ActionResult GetReciept(Sale sale)
+        {
+            SaleView saleView = new SaleView()
+            {
+                CreatedOn = sale.CreatedOn,
+                InvoiceNumber = sale.InvoiceNumber,
+                Total = sale.TotalPrice,
+                VAT = sale.VAT
+            };
+            return PartialView("_ProcessSale", saleView);
         }
     }
 }

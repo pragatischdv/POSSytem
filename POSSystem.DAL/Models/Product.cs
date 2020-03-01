@@ -18,6 +18,7 @@ namespace POSSystem.DAL.Models
         public int AvailableQuantity { get; set; }
         public string Image { get; set; }
         public string Category { get; set; }
+        public ICollection<Sale> Sales { get; set; }
 
     }
 }

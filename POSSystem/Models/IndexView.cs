@@ -7,7 +7,7 @@ namespace POSSystem.Models
 {
     public class IndexView
     {
-        public ICollection<ProductView> ProductsList { get; set; }
+        public ICollection<SalesProductView> ProductsList { get; set; }
         public SaleView Sale { get; set; }
     }
 }

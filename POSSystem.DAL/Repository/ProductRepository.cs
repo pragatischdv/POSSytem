@@ -84,14 +84,13 @@ namespace POSSystem.DAL.Repository
             }
         }
 
-        public async Task<bool> CancelSaleForProductId(int id, int quantity)
+        public async Task<bool> UpdateSaleForProduct(Product product)
         {
             using(var db = new ApplicationDbContext())
             {
                 try
                 {
-                    var product = await GetProduct(id);
-                    product.AvailableQuantity = product.AvailableQuantity + quantity;
+                    db.Entry(product).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                     return true;
                 }

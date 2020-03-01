@@ -1,0 +1,51 @@
+﻿@model POSSystem.Models.SaleView
+
+<div>
+    <h4>Sale Receipt</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Sale Number :: 00
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InvoiceNumber)
+        </dd>
+
+        <dt>
+            Date
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedOn)
+        </dd>
+        <dt style="width:70%">
+            @{
+                List<POSSystem.Models.SalesProductView> _list = Session["ProductSaleList"] as List<POSSystem.Models.SalesProductView>;
+                _list = _list.Where(x => x.Quantity != 0).ToList();
+            }
+            @if (_list.Count != 0)
+            {
+                @Html.Partial("~/Views/Sale/_SaleProductList.cshtml", _list);
+            }
+        </dt>
+        <dd>     
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.VAT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VAT)
+        </dd>
+
+        <dt>
+            Grand Total
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+
+    </dl>
+</div>

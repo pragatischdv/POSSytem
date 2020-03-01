@@ -1,11 +1,13 @@
-﻿@model IEnumerable<POSSystem.Models.ProductView>
+﻿@model IEnumerable<POSSystem.Models.SalesProductView>
     <div>
         @foreach (var item in Model)
         {
-
+            if (item.AvailableQuantity != 0)
+            {
             <div id="product_@item.ID" style="float:left;width:20%;height:80px;margin:5px;background-image:url('../../Content/images/@item.Image');">
                 @item.Name
-                <button type="button" class="add_to_sale" id="@item.ID">Add</button>
+                <button type="button" class="add_to_sale" id="@item.ID" onclick="addProductInSale(@item.ID)">Add</button>
             </div>
+            }
         }
     </div>

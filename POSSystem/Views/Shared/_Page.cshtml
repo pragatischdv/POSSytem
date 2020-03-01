@@ -1,0 +1,18 @@
+﻿@model POSSystem.Models.IndexView
+
+
+<div id="sale" class="col-md-4">
+    @Html.Partial("~/Views/Sale/_Create.cshtml", Model.Sale)
+</div>
+
+<div id="product_list" class="col-md-8">
+    @Html.Partial("~/Views/Product/_ProductList.cshtml", Model.ProductsList)
+</div>
+<script>
+    $(document).ready(function () {
+        $("#VAT, #Discount").on("keyup", function () {
+            updateCosts();
+        });
+    });
+</script>
+

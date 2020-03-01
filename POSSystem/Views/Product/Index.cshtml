@@ -3,38 +3,107 @@
     ViewBag.Title = "POS System";
 }
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<link rel="stylesheet" href="~/Content/bootstrap.css" />
 
-<div class="row">
-    <div id="sale" class="col-md-4">
-        @Html.Partial("_Create", Model.Sale)
+<div class="row" id="page">
+    @Html.Partial("_Page", Model)
+</div>
+
+<div id="process-sale-dialog" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                </h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
     </div>
-
-    <div id="product_list" class="col-md-8">
-        @Html.Partial("_ProductList", Model.ProductsList)
+</div>
+<div id="cancel-sale-dialog" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                </h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="cancelSale()">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    No
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 <script>
+    function openDialog() {
+        $("#cancel-sale-dialog .modal-body").html("<p>Are you Sure?</p>");
+        $("#cancel-sale-dialog").modal("show");
+    }
     function addProductInSale(id) {
         $.ajax({
-                url: "@Url.Action("AddProductToSale", "Product", new {id = "-1" })".replace("-1", id),
-                method: "GET",
-                contentType:'text/html',
-                success: function (data) {
+            url: "@Url.Action("AddProductToSale", "Product", new {id = "-1" })".replace("-1", id),
+            method: "GET",
+            contentType:'text/html',
+            success: function (data) {
+                    $("#page").html(data);
                     console.log("success");
-                    $("#product_in_sale").html(data);
                     updateCosts();
                 }
             });
     }
     function removeProductInSale(id) {
         $.ajax({
-                url: "@Url.Action("DecrementQuantity", "Product", new {id = "-1" })".replace("-1", id),
-                method: "GET",
-                contentType:'text/html',
-                success: function (data) {
-                    console.log("success");
-                    $("#product_in_sale").html(data);
-                    updateCosts();
+            url: "@Url.Action("DecrementQuantity", "Product", new {id = "-1" })".replace("-1", id),
+            method: "GET",
+            contentType:'text/html',
+            success: function (data) {
+                $("#page").html(data);
+                console.log("success");
+                updateCosts();
+                }
+            });
+    }
+    function cancelSale() {
+        $.ajax({
+            url: "@Url.Action("CancelSale", "Product")",
+            method: "GET",
+            contentType:'text/html',
+            success: function (data) {
+                $("#page").html(data);
+                $("#cancel-sale-dialog").modal("hide");
+                $("#process-sale-dialog .modal-body").html("<p>Sale is Cancelled!</p>");
+                $("#process-sale-dialog").modal("show");               
+                $("#SubTotal").val('0');
+                $("#Total").val('0');
+                }
+            });
+    }
+    function clearSale() {
+        $.ajax({
+            url: "@Url.Action("CancelSale", "Product")",
+            method: "GET",
+            contentType:'text/html',
+            success: function (data) {
+                $("#page").html(data);
+                $("#SubTotal").val('0');
+                $("#Total").val('0');
                 }
             });
     }
@@ -49,14 +118,26 @@
         $("#SubTotal").val(subTotal);
         $("#Total").val(parseFloat(subTotal) + parseFloat($("#VAT").val() ? $("#VAT").val() : '0'));
     }
-    $(document).ready(function () {
-        $(".add_to_sale").on("click", function () {
-            var id = $(this).attr("id");
-            addProductInSale(id);
-        });
-        updateCosts();
-        $("#VAT, #Discount").on("keyup", function () {
-            updateCosts();
-        });
-    });
+    function processSale() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("AddSale", "Sale")',
+            data: {
+                'VAT': $("#VAT").val(),
+                'Discount': $("#Discount").val(),
+                'SubTotal': $("#SubTotal").val(),
+                'Total': $("#Total").val()
+            },
+            success: function(data){
+                console.log('success!');
+                $("#process-sale-dialog .modal-body").html(data);
+                $("#process-sale-dialog .modal-body").find(".minus-quatity").remove();
+                $("#process-sale-dialog .modal-body").find(".plus-quatity").remove();
+                $("#process-sale-dialog").modal("show");
+                clearSale();
+                $("#SubTotal").val('0');
+                $("#Total").val('0');
+            }
+});
+    }
 </script>
